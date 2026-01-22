@@ -1,0 +1,37 @@
+{
+  "name": "@portfolio2/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@portfolio2/ui": "*",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.42.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "12.0.0-alpha.1",
+    "next": "15.1.3",
+    "postcss": "^8.4.38",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss": "^4.0.0",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "15.1.3",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "15.1.3",
+    "typescript": "^5.3.3"
+  }
+}

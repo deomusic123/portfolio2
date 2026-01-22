@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "ui-sans-serif", "system-ui", "sans-serif";
+  
+  /* Colores personalizados para Agencia Digital */
+  --color-primary: oklch(0.6 0.25 260);
+  --color-secondary: oklch(0.5 0.2 200);
+  --color-accent: oklch(0.7 0.3 60);
+  --color-success: oklch(0.65 0.25 142);
+  --color-warning: oklch(0.7 0.25 65);
+  --color-error: oklch(0.6 0.25 25);
+  
+  /* Animaciones personalizadas requeridas por Aceternity */
+  --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+  
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+  
+  /* Animación fade-in común */
+  --animate-fade-in: fade-in 0.3s ease-in;
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Forzar escaneo de archivos para compatibilidad con librerías externas */
+@source "../**/*.{js,ts,jsx,tsx}";
+
+/* Estilos globales */
+@layer base {
+  body {
+    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-300;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .blend-mode-multiply {
+    mix-blend-mode: multiply;
+  }
+
+  .blur-glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}

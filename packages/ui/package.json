@@ -1,0 +1,28 @@
+{
+  "name": "@portfolio2/ui",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "exports": {
+    ".": "./index.tsx",
+    "./lib/utils": "./lib/utils.ts",
+    "./lib/framer": "./lib/framer.tsx"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "framer-motion": "12.0.0-alpha.1",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.3.3"
+  }
+}

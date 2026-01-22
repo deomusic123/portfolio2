@@ -1,0 +1,598 @@
+'use client';
+
+import { BackgroundBeams, BentoGrid, BentoGridItem } from '@portfolio2/ui';
+import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
+import { StickyScrollReveal } from '@/components/ui/sticky-scroll-reveal';
+import { DummyChart, DummyList, DummyCode, DummyCollaboration } from '@/components/DummyComponents';
+import Navbar from '@/components/Navbar';
+import Link from 'next/link';
+
+const useCases = [
+  {
+    quote: (
+      <div className="flex flex-col h-full justify-between">
+        <div>
+          <div className="h-12 w-12 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Velocidad Extrema</h3>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            De formulario a CRM en <span className="text-pink-400 font-bold">60 segundos</span>. Enriquecimiento de datos automático sin intervención humana.
+          </p>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">TECH STACK</span>
+          <span className="px-3 py-1.5 rounded bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-300">n8n + Supabase</span>
+        </div>
+      </div>
+    ),
+    name: "Lead Management",
+    title: "Workflow Automation",
+  },
+  {
+    quote: (
+      <div className="flex flex-col h-full justify-between">
+        <div>
+          <div className="h-12 w-12 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Escalado Infinito</h3>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            Arquitectura Multi-Tenant. Añade <span className="text-emerald-400 font-bold">+100 clientes</span> sin duplicar bases de datos ni aumentar costos.
+          </p>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">TECH STACK</span>
+          <span className="px-3 py-1.5 rounded bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-300">RLS + Postgres</span>
+        </div>
+      </div>
+    ),
+    name: "Infrastructure",
+    title: "Scalability",
+  },
+  {
+    quote: (
+      <div className="flex flex-col h-full justify-between">
+        <div>
+          <div className="h-12 w-12 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Reportes Instantáneos</h3>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            Dashboards de cliente generados <span className="text-blue-400 font-bold">cada semana</span> automáticamente. Métricas de rendimiento exportadas a PDF sin trabajo manual.
+          </p>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">TECH STACK</span>
+          <span className="px-3 py-1.5 rounded bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-300">Analytics + Email</span>
+        </div>
+      </div>
+    ),
+    name: "Client Reporting",
+    title: "Automation",
+  },
+  {
+    quote: (
+      <div className="flex flex-col h-full justify-between">
+        <div>
+          <div className="h-12 w-12 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Sincronización Real-Time</h3>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            Comentarios, @menciones y actualizaciones en <span className="text-cyan-400 font-bold">&lt;100ms</span>. Colaboración sin recargar navegador.
+          </p>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">TECH STACK</span>
+          <span className="px-3 py-1.5 rounded bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-300">WebSockets + DB</span>
+        </div>
+      </div>
+    ),
+    name: "Team Communication",
+    title: "Real-time Sync",
+  },
+  {
+    quote: (
+      <div className="flex flex-col h-full justify-between">
+        <div>
+          <div className="h-12 w-12 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Crecimiento Sin Fricción</h3>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            Onboarding de nuevo cliente en <span className="text-purple-400 font-bold">15 minutos</span>. Template optimizado que escala sin overhead adicional.
+          </p>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+          <span className="text-xs text-zinc-500 uppercase tracking-wider">TECH STACK</span>
+          <span className="px-3 py-1.5 rounded bg-zinc-800/50 border border-zinc-700/50 text-xs text-zinc-300">Turborepo + Next</span>
+        </div>
+      </div>
+    ),
+    name: "Growth Operations",
+    title: "Architecture",
+  },
+];
+
+export default function LandingPage() {
+  return (
+    <main className="min-h-screen bg-black relative">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-transparent via-blue-950/5 to-black">
+        <div className="absolute inset-0 pointer-events-none">
+          <BackgroundBeams className="opacity-40" />
+        </div>
+        
+        {/* Partículas flotantes */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-2 h-2 bg-blue-500 rounded-full opacity-20 animate-pulse" />
+          <div className="absolute top-40 right-20 w-3 h-3 bg-purple-500 rounded-full opacity-30 animate-pulse delay-75" />
+          <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-pink-500 rounded-full opacity-20 animate-pulse delay-150" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+          <div className="text-center space-y-8">
+            {/* Badge verde superior */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span className="text-emerald-400 text-sm font-medium">
+                🚀 Setup Sprint: De 0 a Producción en 7 Días - Solo $1,000
+              </span>
+            </div>
+
+            {/* Título principal */}
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight">
+              <span className="block text-white font-mono">Tu Agencia,</span>
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 font-mono">
+                Operando en Piloto
+              </span>
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 font-mono">
+                Automático
+              </span>
+            </h1>
+
+            {/* Subtítulo */}
+            <p className="max-w-3xl mx-auto text-xl md:text-2xl text-zinc-400 leading-relaxed">
+              Deja de gestionar clientes en Excel.
+              <br />
+              <span className="text-blue-400">Implementamos tu infraestructura de crecimiento (Next.js + CRM + Automatización) en 7 días.</span>
+            </p>
+
+            {/* Botones CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <Link
+                href="/register"
+                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-black text-white text-lg shadow-[0_0_30px_rgba(59,130,246,0.5)] hover:shadow-[0_0_50px_rgba(59,130,246,0.8)] transition-all duration-300 hover:scale-105"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Comenzar Ahora →
+                </span>
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-100 blur transition-opacity" />
+              </Link>
+              
+              <Link
+                href="#demo"
+                className="px-8 py-4 rounded-xl font-bold text-white text-lg border-2 border-white/10 hover:border-white/30 hover:bg-white/5 transition-all duration-300"
+              >
+                Ver Demo
+              </Link>
+            </div>
+
+            {/* Micro Social Proof */}
+            <div className="flex items-center justify-center gap-3 pt-4">
+              <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 border-2 border-black" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-black" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 border-2 border-black" />
+              </div>
+              <span className="text-sm text-zinc-500 font-mono uppercase tracking-wider">USADO POR +50 AGENCIAS MODERNAS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Dashboard + Tech Stack - Sticky Scroll Reveal */}
+      <div className="-mt-32">
+      <StickyScrollReveal
+        children={
+          <div className="relative w-full max-w-[1200px] mx-auto px-6" style={{ maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)' }}>
+        {/* Glow effects */}
+        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-10 bg-gradient-to-r from-blue-500/60 via-purple-500/70 to-pink-500/60 blur-3xl rounded-[100%] animate-pulse" />
+        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-10 bg-black/50 blur-2xl rounded-[100%] animate-pulse" />
+        
+        <div className="relative rounded-2xl border-4 border-[#6C6C6C] p-5 bg-[#222222] shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-float">
+          <div className="rounded-xl overflow-hidden bg-gradient-to-br from-zinc-900 to-black">
+            {/* Dashboard Content */}
+            <div className="p-8 space-y-6">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">P</span>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg">Portfolio2</h3>
+                    <p className="text-zinc-500 text-xs">Agency Dashboard</p>
+                  </div>
+                </div>
+                <button className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg border border-white/10 transition-colors">
+                  + New Project
+                </button>
+              </div>
+
+              {/* Stats Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="p-4 rounded-xl bg-zinc-800/50 border border-white/5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                      <span className="text-xl">👥</span>
+                    </div>
+                  </div>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider mb-1">Total Leads</p>
+                  <p className="text-white text-2xl font-bold">156</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-zinc-800/50 border border-white/5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
+                      <span className="text-xl">🚀</span>
+                    </div>
+                  </div>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider mb-1">Active Projects</p>
+                  <p className="text-white text-2xl font-bold">23</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-zinc-800/50 border border-white/5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                      <span className="text-xl">✅</span>
+                    </div>
+                  </div>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider mb-1">Conversion</p>
+                  <p className="text-white text-2xl font-bold">68%</p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-zinc-800/50 border border-white/5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                      <span className="text-xl">💰</span>
+                    </div>
+                  </div>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider mb-1">Revenue</p>
+                  <p className="text-white text-2xl font-bold">$45K</p>
+                </div>
+              </div>
+
+              {/* Leads Pipeline & Recent Activity */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {/* Leads Pipeline */}
+                <div className="p-6 rounded-xl bg-zinc-800/30 border border-white/5">
+                  <h4 className="text-white font-bold mb-4">Leads Pipeline</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-zinc-400">New</span>
+                        <span className="text-white font-bold">45</span>
+                      </div>
+                      <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500" style={{ width: '75%' }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-zinc-400">Contacted</span>
+                        <span className="text-white font-bold">32</span>
+                      </div>
+                      <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500" style={{ width: '55%' }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-zinc-400">Qualified</span>
+                        <span className="text-white font-bold">18</span>
+                      </div>
+                      <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500" style={{ width: '35%' }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="p-6 rounded-xl bg-zinc-800/30 border border-white/5">
+                  <h4 className="text-white font-bold mb-4">Recent Activity</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">AM</div>
+                      <div className="flex-1">
+                        <p className="text-white text-sm font-medium">Ana M.</p>
+                        <p className="text-zinc-500 text-xs">created new lead</p>
+                      </div>
+                      <span className="text-zinc-600 text-xs">2m ago</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xs font-bold">CR</div>
+                      <div className="flex-1">
+                        <p className="text-white text-sm font-medium">Carlos R.</p>
+                        <p className="text-zinc-500 text-xs">updated project</p>
+                      </div>
+                      <span className="text-zinc-600 text-xs">15m ago</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white text-xs font-bold">ST</div>
+                      <div className="flex-1">
+                        <p className="text-white text-sm font-medium">Sofía T.</p>
+                        <p className="text-zinc-500 text-xs">sent proposal</p>
+                      </div>
+                      <span className="text-zinc-600 text-xs">1h ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Glow effect */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 blur-3xl -z-10 opacity-50" />
+          </div>
+        </div>
+      </div>
+        }
+        content={
+          <section className="py-24 relative z-20">
+        <div className="text-center mb-12">
+          <h2 className="text-sm font-mono uppercase tracking-[0.2em] text-zinc-500">
+            Infrastructure Core
+          </h2>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            {/* Next.js 15 */}
+            <div className="group flex items-center gap-4 p-7 rounded-2xl bg-zinc-900/40 border border-white/5 hover:bg-zinc-900/80 hover:border-white/10 transition-all duration-300">
+              <div className="h-12 w-12 rounded-lg bg-black border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-colors relative z-10">
+                <span className="text-2xl font-black text-white">N</span>
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-zinc-100 font-medium">Next.js 15</h3>
+                <p className="text-xs text-blue-500/80 font-mono">Hyper-Performance UI</p>
+              </div>
+            </div>
+
+            {/* Supabase */}
+            <div className="group flex items-center gap-4 p-7 rounded-2xl bg-zinc-900/40 border border-white/5 hover:bg-zinc-900/80 hover:border-white/10 transition-all duration-300">
+              <div className="h-12 w-12 rounded-lg bg-black border border-white/10 flex items-center justify-center group-hover:border-emerald-500/50 transition-colors relative z-10">
+                <svg className="w-6 h-6 text-emerald-400" viewBox="0 0 109 113" fill="currentColor"><path d="M63.7076 110.284C60.8481 113.885 55.0502 111.912 54.9813 107.314L53.9738 40.0627L99.1935 40.0627C107.384 40.0627 111.952 49.5228 106.859 55.9374L63.7076 110.284Z" /><path d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.041L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.1655 56.4175L45.317 2.07103Z" fillOpacity="0.5"/></svg>
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-zinc-100 font-medium">Supabase</h3>
+                <p className="text-xs text-emerald-500/80 font-mono">Real-time Database</p>
+              </div>
+            </div>
+
+            {/* n8n */}
+            <div className="group flex items-center gap-4 p-7 rounded-2xl bg-zinc-900/40 border border-white/5 hover:bg-zinc-900/80 hover:border-white/10 transition-all duration-300">
+              <div className="h-12 w-12 rounded-lg bg-black border border-white/10 flex items-center justify-center group-hover:border-pink-500/50 transition-colors relative z-10">
+                <svg className="w-6 h-6 text-pink-400" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="9" height="9" rx="2"/><rect x="13" y="2" width="9" height="9" rx="2"/><rect x="2" y="13" width="9" height="9" rx="2"/><rect x="13" y="13" width="9" height="9" rx="2"/></svg>
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-zinc-100 font-medium">n8n</h3>
+                <p className="text-xs text-pink-500/80 font-mono">Workflow Automation</p>
+              </div>
+            </div>
+
+            {/* TypeScript */}
+            <div className="group flex items-center gap-4 p-7 rounded-2xl bg-zinc-900/40 border border-white/5 hover:bg-zinc-900/80 hover:border-white/10 transition-all duration-300">
+              <div className="h-12 w-12 rounded-lg bg-black border border-white/10 flex items-center justify-center group-hover:border-blue-500/50 transition-colors relative z-10">
+                <svg className="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M0 12v12h24V0H0zm19.341-.956c.61.152 1.074.423 1.501.865.221.236.549.666.575.77.008.03-1.036.73-1.668 1.123-.023.015-.115-.084-.217-.236-.31-.45-.633-.644-1.128-.678-.728-.05-1.196.331-1.192.967a.88.88 0 00.102.45c.16.331.458.53 1.39.934 1.719.74 2.454 1.227 2.911 1.92.51.773.625 2.008.278 2.926-.38.998-1.325 1.676-2.655 1.9-.411.073-1.386.062-1.828-.018-.964-.172-1.878-.648-2.442-1.273-.221-.244-.651-.88-.625-.925.011-.016.11-.077.22-.141.108-.061.511-.294.892-.515l.69-.4.145.214c.202.308.643.731.91.872.766.404 1.817.347 2.335-.118a.883.883 0 00.313-.72c0-.278-.035-.4-.18-.61-.186-.266-.567-.49-1.649-.96-1.238-.533-1.771-.864-2.259-1.39a3.165 3.165 0 01-.659-1.2c-.091-.339-.114-1.189-.042-1.531.255-1.197 1.158-2.03 2.461-2.278.423-.08 1.406-.05 1.821.053zm-5.634 1.002l.008.983H10.59v8.876H8.381v-8.876H5.258v-.964c0-.534.011-.98.026-.99.012-.016 1.913-.024 4.217-.02l4.195.012z"/></svg>
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-zinc-100 font-medium">TypeScript</h3>
+                <p className="text-xs text-blue-500/80 font-mono">Type Safety</p>
+              </div>
+            </div>
+
+            {/* React 19 */}
+            <div className="group flex items-center gap-4 p-7 rounded-2xl bg-zinc-900/40 border border-white/5 hover:bg-zinc-900/80 hover:border-white/10 transition-all duration-300">
+              <div className="h-12 w-12 rounded-lg bg-black border border-white/10 flex items-center justify-center group-hover:border-cyan-500/50 transition-colors relative z-10">
+                <svg className="w-6 h-6 text-cyan-400" viewBox="-11.5 -10.23174 23 20.46348" fill="currentColor"><circle cx="0" cy="0" r="2.05" fill="currentColor"/><g stroke="currentColor" strokeWidth="1" fill="none"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/></g></svg>
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-zinc-100 font-medium">React 19</h3>
+                <p className="text-xs text-cyan-500/80 font-mono">Server Components</p>
+              </div>
+            </div>
+
+            {/* Tailwind v4 */}
+            <div className="group flex items-center gap-4 p-7 rounded-2xl bg-zinc-900/40 border border-white/5 hover:bg-zinc-900/80 hover:border-white/10 transition-all duration-300">
+              <div className="h-12 w-12 rounded-lg bg-black border border-white/10 flex items-center justify-center group-hover:border-sky-500/50 transition-colors relative z-10">
+                <svg className="w-6 h-6 text-sky-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/></svg>
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-zinc-100 font-medium">Tailwind v4</h3>
+                <p className="text-xs text-sky-500/80 font-mono">Oxide Engine</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+        }
+      />
+      </div>
+
+      {/* Use Cases - Resultados Diseñados para Escalar */}
+      <section className="py-20 bg-gradient-to-b from-black via-blue-950/10 to-black overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">
+            Resultados Diseñados para <span className="text-blue-400">Escalar</span>
+          </h2>
+          <p className="text-zinc-400 text-center text-lg">
+            Casos de uso reales implementados en la arquitectura Portfolio2
+          </p>
+        </div>
+
+        <InfiniteMovingCards
+          items={useCases}
+          direction="right"
+          speed="slow"
+        />
+      </section>
+
+      {/* Features Bento Grid */}
+      <section className="py-20 bg-gradient-to-b from-black via-purple-950/5 to-black">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">
+            Todo lo que necesitas para <span className="text-blue-400">escalar</span>
+          </h2>
+          <p className="text-zinc-400 text-center text-lg mb-12">
+            Herramientas potentes diseñadas para agencias que quieren crecer sin límites
+          </p>
+
+          <BentoGrid className="max-w-6xl mx-auto">
+            <BentoGridItem
+              title="Gestión de Proyectos"
+              description="Organiza y rastrea todos tus proyectos en un solo lugar con estados personalizables."
+              header={<DummyList />}
+              className="md:col-span-2"
+            />
+            <BentoGridItem
+              title="Analytics en Tiempo Real"
+              description="Visualiza el rendimiento de tu agencia con métricas actualizadas al instante."
+              header={<DummyChart />}
+              className="md:col-span-1"
+            />
+            <BentoGridItem
+              title="Automatización Potente"
+              description="Workflows con n8n integrado. Conecta cualquier herramienta sin código."
+              header={<DummyCode />}
+              className="md:col-span-1"
+            />
+            <BentoGridItem
+              title="Colaboración en Tiempo Real"
+              description="Trabaja con tu equipo con actualizaciones instantáneas y comentarios."
+              header={<DummyCollaboration />}
+              className="md:col-span-2"
+            />
+          </BentoGrid>
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="py-32 bg-gradient-to-b from-black via-purple-950/20 to-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent" />
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-5xl md:text-6xl font-black text-white mb-6">
+            ¿Listo para dejar de perder leads?
+          </h2>
+          <p className="text-xl text-zinc-400 mb-12">
+            Implementamos tu infraestructura completa en 7 días. Precio fijo. Sin sorpresas. Únete a la nueva generación de agencias.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/register"
+              className="group relative px-8 py-4 bg-white text-black rounded-xl font-black text-lg shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_50px_rgba(255,255,255,0.5)] transition-all duration-300 hover:scale-105"
+            >
+              Comenzar Setup Sprint ($1,000)
+            </Link>
+            
+            <Link
+              href="#"
+              className="px-8 py-4 rounded-xl font-bold text-white text-lg border-2 border-white/20 hover:border-white/40 hover:bg-white/5 transition-all duration-300"
+            >
+              Agendar Auditoría Gratis
+            </Link>
+          </div>
+
+          <p className="text-sm text-zinc-600 mt-8 uppercase tracking-wider">
+            Garantía de entrega o te devolvemos tu dinero
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-black border-t border-white/5 py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">P</span>
+                </div>
+                <span className="text-white font-bold text-xl">Portfolio2</span>
+              </div>
+              <p className="text-zinc-500 text-sm leading-relaxed">
+                Infraestructura digital para agencias que escalan. Automatización, CRM y desarrollo web de alto rendimiento.
+              </p>
+            </div>
+
+            {/* Producto */}
+            <div>
+              <h4 className="text-white font-bold mb-4">Producto</h4>
+              <ul className="space-y-2">
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Features</Link></li>
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Pricing</Link></li>
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Case Studies</Link></li>
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Documentation</Link></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="text-white font-bold mb-4">Legal</h4>
+              <ul className="space-y-2">
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Privacidad</Link></li>
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Términos</Link></li>
+                <li><Link href="#" className="text-zinc-500 hover:text-white transition-colors text-sm">Licencia</Link></li>
+              </ul>
+            </div>
+
+            {/* Social */}
+            <div>
+              <h4 className="text-white font-bold mb-4">Síguenos</h4>
+              <div className="flex gap-3">
+                <a href="#" className="w-10 h-10 rounded-lg bg-zinc-900 hover:bg-zinc-800 flex items-center justify-center transition-colors">
+                  <span className="text-zinc-400">𝕏</span>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-lg bg-zinc-900 hover:bg-zinc-800 flex items-center justify-center transition-colors">
+                  <span className="text-zinc-400">in</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 text-center">
+            <p className="text-zinc-600 text-sm">
+              © 2026 Portfolio2 Agency. Todos los derechos reservados.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}
