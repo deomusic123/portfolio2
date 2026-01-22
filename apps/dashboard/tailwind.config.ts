@@ -5,8 +5,25 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../packages/ui/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        sidebar: {
+          DEFAULT: "hsl(var(--color-sidebar-background))",
+          foreground: "hsl(var(--color-sidebar-foreground))",
+          primary: "hsl(var(--color-sidebar-primary))",
+          "primary-foreground": "hsl(var(--color-sidebar-primary-foreground))",
+          accent: "hsl(var(--color-sidebar-accent))",
+          "accent-foreground": "hsl(var(--color-sidebar-accent-foreground))",
+          border: "hsl(var(--color-sidebar-border))",
+          ring: "hsl(var(--color-sidebar-ring))",
+        },
+      },
+    },
+  },
   plugins: [addVariablesForColors],
 };
 

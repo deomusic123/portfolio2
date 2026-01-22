@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className="antialiased">
+    <html lang="es" suppressHydrationWarning className="dark">
+      <body className="antialiased" suppressHydrationWarning style={{ margin: 0, padding: 0, width: '100vw', height: '100vh', overflow: 'hidden' }}>
         <MotionProvider>
           <ClientProviders>
             {children}
