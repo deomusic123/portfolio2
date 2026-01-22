@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { useScroll, useTransform, m } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 
 export const StickyScrollReveal = ({
   children,
@@ -15,23 +15,14 @@ export const StickyScrollReveal = ({
     offset: ["start start", "end start"], // Empieza cuando el top toca el top
   });
 
-  // Animaciones Mágicas
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const filter = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(10px)"]);
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]); // Efecto parallax sutil
-
   return (
     <div ref={targetRef} className="relative h-[157.5vh]"> {/* Altura ajustada para scroll óptimo */}
       
       {/* CAPA 1: EL DASHBOARD (Se queda pegado y se desvanece) */}
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
-        <m.div
-          style={{ scale, opacity, filter, y }}
-          className="relative w-full h-full flex items-center justify-center"
-        >
+        <div className="relative w-full h-full flex items-center justify-center">
           {children}
-        </m.div>
+        </div>
       </div>
 
       {/* CAPA 2: EL TECH STACK (Sube y cubre al dashboard) */}
