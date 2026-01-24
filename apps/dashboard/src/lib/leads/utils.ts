@@ -12,50 +12,50 @@ import { type LeadStatus, type Lead, LEAD_STATUSES } from './types';
 export const KANBAN_COLUMNS = [
   {
     id: LEAD_STATUSES.NEW,
-    title: 'New',
-    color: 'blue',
+    label: 'New',
+    color: '#3b82f6',
     icon: '🆕',
     description: 'Fresh leads waiting for investigation',
   },
   {
     id: LEAD_STATUSES.INVESTIGATING,
-    title: 'Investigating',
-    color: 'purple',
+    label: 'Investigating',
+    color: '#a855f7',
     icon: '🔍',
     description: 'AI analyzing tech stack & opportunities',
   },
   {
     id: LEAD_STATUSES.CONTACTED,
-    title: 'Contacted',
-    color: 'cyan',
+    label: 'Contacted',
+    color: '#06b6d4',
     icon: '📞',
     description: 'Initial contact made',
   },
   {
     id: LEAD_STATUSES.MEETING_BOOKED,
-    title: 'Meeting',
-    color: 'yellow',
+    label: 'Meeting',
+    color: '#eab308',
     icon: '📅',
     description: 'Call or meeting scheduled',
   },
   {
     id: LEAD_STATUSES.PROPOSAL_SENT,
-    title: 'Proposal',
-    color: 'orange',
+    label: 'Proposal',
+    color: '#f97316',
     icon: '📄',
     description: 'Proposal sent, awaiting decision',
   },
   {
     id: LEAD_STATUSES.CLOSED_WON,
-    title: 'Won',
-    color: 'green',
+    label: 'Won',
+    color: '#22c55e',
     icon: '🎉',
     description: 'Converted to client',
   },
   {
     id: LEAD_STATUSES.CLOSED_LOST,
-    title: 'Lost',
-    color: 'red',
+    label: 'Lost',
+    color: '#ef4444',
     icon: '❌',
     description: 'Not converted',
   },
@@ -80,7 +80,7 @@ export function getStatusColor(status: LeadStatus): string {
     won: 'text-green-400 bg-green-500/20 border-green-500/30',
     lost: 'text-red-400 bg-red-500/20 border-red-500/30',
   };
-  return colorMap[status] || colorMap.new;
+  return colorMap[status] || colorMap['new'] || 'text-zinc-400 bg-zinc-500/20 border-zinc-500/30';
 }
 
 export function getScoreColor(score: number): string {
@@ -164,14 +164,15 @@ export function shouldHighlight(lead: Lead): boolean {
 // GROUPING UTILITIES
 // ============================================
 
-export function groupLeadsByStatus(leads: Lead[]): Record<LeadStatus, Lead[]> {
+export function groupLeadsByStatus(leads: Lead[]): Record<string, Lead[]> {
   return {
     new: leads.filter(l => l.status === LEAD_STATUSES.NEW),
+    investigating: leads.filter(l => l.status === LEAD_STATUSES.INVESTIGATING),
     contacted: leads.filter(l => l.status === LEAD_STATUSES.CONTACTED),
-    qualified: leads.filter(l => l.status === LEAD_STATUSES.QUALIFIED),
-    proposal: leads.filter(l => l.status === LEAD_STATUSES.PROPOSAL),
-    won: leads.filter(l => l.status === LEAD_STATUSES.WON),
-    lost: leads.filter(l => l.status === LEAD_STATUSES.LOST),
+    meeting_booked: leads.filter(l => l.status === LEAD_STATUSES.MEETING_BOOKED),
+    proposal_sent: leads.filter(l => l.status === LEAD_STATUSES.PROPOSAL_SENT),
+    closed_won: leads.filter(l => l.status === LEAD_STATUSES.CLOSED_WON),
+    closed_lost: leads.filter(l => l.status === LEAD_STATUSES.CLOSED_LOST),
   };
 }
 
@@ -210,7 +211,9 @@ export function isValidEmail(email: string): boolean {
 
 export function extractDomain(email: string): string | null {
   if (!isValidEmail(email)) return null;
-  return email.split('@')[1];
+  const parts = email.split('@');
+  const domain = parts[1];
+  return domain ?? null;
 }
 
 // ============================================

@@ -4,6 +4,7 @@ import { ROUTES } from '@/lib/constants';
 import { groupLeadsByStatus, KANBAN_COLUMNS } from '@/lib/leads/utils';
 import type { Lead } from '@/lib/leads/types';
 import { LeadCard } from '@/components/leads/LeadCard';
+import { NewLeadButton } from '@/components/leads/NewLeadButton';
 
 export const metadata = {
   title: 'Leads Engine - Portfolio2',
@@ -54,8 +55,8 @@ export default async function LeadsPage() {
           <h1 className="text-4xl font-bold text-white mb-2">
             Leads Engine
           </h1>
-          <p className="text-zinc-500">🔥 • {investigating} analyzing 🔍 • ${totalValue.toLocaleString()} potential
-            {totalLeads} total • {hotLeads} hot leads 🔥 • ${totalValue.toLocaleString()} potential value
+          <p className="text-zinc-500">
+            🔥 {investigating} analyzing • 🎯 {totalLeads} total • ⚡ {hotLeads} hot leads • 💰 ${totalValue.toLocaleString()} potential value
           </p>
         </div>
 
@@ -64,9 +65,7 @@ export default async function LeadsPage() {
           <button className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all">
             Import CSV
           </button>
-          <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105 transition-all shadow-lg">
-            + New Lead
-          </button>
+          <NewLeadButton />
         </div>
       </div>
 
@@ -135,9 +134,7 @@ export default async function LeadsPage() {
             <div className="text-6xl mb-4">🎯</div>
             <h3 className="text-2xl font-bold text-white mb-2">No leads yet</h3>
             <p className="text-zinc-500 mb-6">Create your first lead to start converting!</p>
-            <button className="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105 transition-all shadow-lg">
-              + Create Your First Lead
-            </button>
+            <NewLeadButton />
           </div>
         </div>
       )}

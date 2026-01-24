@@ -20,6 +20,29 @@ import { isValidEmail } from '@/lib/leads/utils';
 // CREATE LEAD
 // ============================================
 
+/**
+ * Create lead from FormData (React 19 useActionState)
+ * Used by NewLeadDialog component
+ */
+export async function createLeadFromForm(
+  _prevState: any,
+  formData: FormData
+): Promise<ActionResponse<{ leadId: string }>> {
+  const input: CreateLeadInput = {
+    name: formData.get('name') as string,
+    email: formData.get('email') as string,
+    phone: formData.get('phone') as string | undefined,
+    website: formData.get('website') as string | undefined,
+    notes: formData.get('notes') as string | undefined,
+    source: formData.get('source') as string | undefined,
+  };
+
+  return createLead(input);
+}
+
+/**
+ * Create lead from object (direct call)
+ */
 export async function createLead(
   input: CreateLeadInput
 ): Promise<ActionResponse<{ leadId: string }>> {
@@ -388,5 +411,4 @@ export async function getLeadInsights(leadId: string) {
       error: error instanceof Error ? error.message : 'Unknown error' 
     };
   }
-}
 }
