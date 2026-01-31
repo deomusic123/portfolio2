@@ -57,7 +57,10 @@ export function StatsCardsRealtime() {
         }
 
         const totalLeads = leads?.length || 0;
-        const convertedLeads = leads?.filter(l => l.status === 'converted').length || 0;
+        const convertedLeads = leads?.filter((l) => {
+          const status = l.status;
+          return status === 'converted' || status === 'closed_won' || status === 'won';
+        }).length || 0;
         const conversionRate = totalLeads > 0 
           ? ((convertedLeads / totalLeads) * 100).toFixed(1) 
           : '0.0';

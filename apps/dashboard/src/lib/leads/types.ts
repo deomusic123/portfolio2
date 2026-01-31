@@ -153,6 +153,7 @@ export interface UpdateLeadInput {
   phone?: string;
   website?: string; // NUEVO
   notes?: string;
+  source?: string;
   status?: LeadStatus;
   potential_value?: number;
   expected_close_date?: string;

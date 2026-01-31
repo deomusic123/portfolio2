@@ -7,7 +7,10 @@ import {
   Users,
   Zap,
   Settings2,
+  FolderKanban,
 } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 import {
   Sidebar,
@@ -19,8 +22,8 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@portfolio2/ui"
+import { ROUTES } from "@/lib/constants"
 
-// Datos de navegación (Centralizados)
 const data = {
   user: {
     name: "Admin Agency",
@@ -33,32 +36,42 @@ const data = {
       plan: "Enterprise",
     },
   ],
-  navMain: [
-    {
-      title: "Overview",
-      url: "/dashboard",
-      icon: PieChart,
-      isActive: true,
-    },
-    {
-      title: "Leads Engine",
-      url: "/dashboard/leads",
-      icon: Users, // Aquí vivirá el Kanban y el Enriquecimiento
-    },
-    {
-      title: "Automatizaciones",
-      url: "/dashboard/automations",
-      icon: Zap, // Aquí veremos el estado de n8n
-    },
-    {
-      title: "Configuración",
-      url: "/dashboard/settings",
-      icon: Settings2,
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+
+  const navMain = React.useMemo(
+    () => [
+      {
+        title: "Overview",
+        url: ROUTES.DASHBOARD,
+        icon: PieChart,
+      },
+      {
+        title: "Leads Engine",
+        url: ROUTES.LEADS,
+        icon: Users,
+      },
+      {
+        title: "Projects",
+        url: ROUTES.PROJECTS,
+        icon: FolderKanban,
+      },
+      {
+        title: "Automatizaciones",
+        url: "/dashboard/automations",
+        icon: Zap,
+      },
+      {
+        title: "Configuración",
+        url: "/dashboard/settings",
+        icon: Settings2,
+      },
+    ],
+    []
+  )
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="border-b border-sidebar-border">
@@ -79,20 +92,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       
       <SidebarContent className="px-2 py-4">
          <SidebarMenu className="gap-1">
-            {data.navMain.map((item) => (
+            {navMain.map((item) => {
+              const isActive = pathname.startsWith(item.url)
+              return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton 
                   asChild 
-                  isActive={item.isActive}
+                  isActive={isActive}
                   className="w-full justify-start"
                 >
-                  <a href={item.url} className="flex items-center gap-3">
+                  <Link href={item.url} className="flex items-center gap-3">
                     <item.icon className="size-5" />
                     <span className="flex-1">{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            ))}
+              )
+            })}
          </SidebarMenu>
       </SidebarContent>
       

@@ -12,52 +12,31 @@ import { type LeadStatus, type Lead, LEAD_STATUSES } from './types';
 export const KANBAN_COLUMNS = [
   {
     id: LEAD_STATUSES.NEW,
-    label: 'New',
+    label: 'Inbox',
     color: '#3b82f6',
-    icon: '🆕',
-    description: 'Fresh leads waiting for investigation',
-  },
-  {
-    id: LEAD_STATUSES.INVESTIGATING,
-    label: 'Investigating',
-    color: '#a855f7',
-    icon: '🔍',
-    description: 'AI analyzing tech stack & opportunities',
+    icon: '📥',
+    description: 'New + Investigating',
   },
   {
     id: LEAD_STATUSES.CONTACTED,
-    label: 'Contacted',
-    color: '#06b6d4',
-    icon: '📞',
-    description: 'Initial contact made',
-  },
-  {
-    id: LEAD_STATUSES.MEETING_BOOKED,
-    label: 'Meeting',
-    color: '#eab308',
-    icon: '📅',
-    description: 'Call or meeting scheduled',
+    label: 'Qualified',
+    color: '#10b981',
+    icon: '🔥',
+    description: 'Hot list ready to work',
   },
   {
     id: LEAD_STATUSES.PROPOSAL_SENT,
-    label: 'Proposal',
-    color: '#f97316',
-    icon: '📄',
-    description: 'Proposal sent, awaiting decision',
+    label: 'In Negotiation',
+    color: '#f59e0b',
+    icon: '🤝',
+    description: 'Meeting + Proposal',
   },
   {
     id: LEAD_STATUSES.CLOSED_WON,
-    label: 'Won',
-    color: '#22c55e',
-    icon: '🎉',
-    description: 'Converted to client',
-  },
-  {
-    id: LEAD_STATUSES.CLOSED_LOST,
-    label: 'Lost',
-    color: '#ef4444',
-    icon: '❌',
-    description: 'Not converted',
+    label: 'Closed',
+    color: '#a855f7',
+    icon: '🏁',
+    description: 'Won / Lost outcomes',
   },
 ] as const;
 
@@ -165,14 +144,26 @@ export function shouldHighlight(lead: Lead): boolean {
 // ============================================
 
 export function groupLeadsByStatus(leads: Lead[]): Record<string, Lead[]> {
+  const sortByPosition = (list: Lead[]) =>
+    [...list].sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
   return {
-    new: leads.filter(l => l.status === LEAD_STATUSES.NEW),
-    investigating: leads.filter(l => l.status === LEAD_STATUSES.INVESTIGATING),
-    contacted: leads.filter(l => l.status === LEAD_STATUSES.CONTACTED),
-    meeting_booked: leads.filter(l => l.status === LEAD_STATUSES.MEETING_BOOKED),
-    proposal_sent: leads.filter(l => l.status === LEAD_STATUSES.PROPOSAL_SENT),
-    closed_won: leads.filter(l => l.status === LEAD_STATUSES.CLOSED_WON),
-    closed_lost: leads.filter(l => l.status === LEAD_STATUSES.CLOSED_LOST),
+    // Inbox: new + investigating
+    [LEAD_STATUSES.NEW]: sortByPosition(
+      leads.filter((l) => l.status === LEAD_STATUSES.NEW || l.status === LEAD_STATUSES.INVESTIGATING)
+    ),
+    // Qualified: contacted + qualified legacy bucket (dropped into CONTACTED)
+    [LEAD_STATUSES.CONTACTED]: sortByPosition(
+      leads.filter((l) => l.status === LEAD_STATUSES.CONTACTED || l.status === LEAD_STATUSES.QUALIFIED)
+    ),
+    // Negotiation: meeting + proposal
+    [LEAD_STATUSES.PROPOSAL_SENT]: sortByPosition(
+      leads.filter((l) => l.status === LEAD_STATUSES.MEETING_BOOKED || l.status === LEAD_STATUSES.PROPOSAL_SENT)
+    ),
+    // Closed: won + lost
+    [LEAD_STATUSES.CLOSED_WON]: sortByPosition(
+      leads.filter((l) => l.status === LEAD_STATUSES.CLOSED_WON || l.status === LEAD_STATUSES.CLOSED_LOST)
+    ),
   };
 }
 

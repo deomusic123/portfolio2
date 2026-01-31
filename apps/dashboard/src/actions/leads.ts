@@ -12,7 +12,8 @@ import {
   type ActionResponse, 
   type CreateLeadInput, 
   type UpdateLeadInput,
-  type LeadStatus 
+  type LeadStatus,
+  LEAD_STATUSES
 } from '@/lib/leads/types';
 import { isValidEmail } from '@/lib/leads/utils';
 
@@ -38,6 +39,31 @@ export async function createLeadFromForm(
   };
 
   return createLead(input);
+}
+
+/**
+ * Update lead from FormData (edit modal uses same layout as new lead)
+ */
+export async function updateLeadFromForm(
+  _prevState: any,
+  formData: FormData
+): Promise<ActionResponse> {
+  const leadId = formData.get('leadId') as string;
+
+  if (!leadId) {
+    return { success: false, error: 'Lead id is required' };
+  }
+
+  const input: UpdateLeadInput = {
+    name: formData.get('name') as string,
+    email: formData.get('email') as string,
+    phone: (formData.get('phone') as string) || undefined,
+    website: (formData.get('website') as string) || undefined,
+    notes: (formData.get('notes') as string) || undefined,
+    source: (formData.get('source') as string) || undefined,
+  };
+
+  return updateLead(leadId, input);
 }
 
 /**
@@ -113,9 +139,18 @@ export async function createLead(
 
 export async function updateLeadStatus(
   leadId: string,
-  newStatus: LeadStatus
+  newStatus: LeadStatus,
+  position?: number
 ): Promise<ActionResponse> {
   try {
+    if (!leadId) {
+      return { success: false, error: 'Lead id is required' };
+    }
+
+    if (!Object.values(LEAD_STATUSES).includes(newStatus)) {
+      return { success: false, error: 'Invalid status' };
+    }
+
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -123,13 +158,30 @@ export async function updateLeadStatus(
       return { success: false, error: 'Unauthorized' };
     }
 
+    // Build update payload
+    const updates: Record<string, unknown> = {
+      status: newStatus,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (typeof position === 'number') {
+      const safePosition = Number.isFinite(position) && position >= 0 ? position : 0;
+      updates.position = safePosition;
+    }
+
+    // Shift positions in target column to keep ordering stable
+    if (typeof updates.position === 'number') {
+      await supabase.rpc('shift_lead_positions', {
+        p_client_id: user.id,
+        p_status: newStatus,
+        p_position: updates.position,
+      });
+    }
+
     // Update lead (RLS ensures user owns this lead)
     const { error } = await supabase
       .from('leads')
-      .update({ 
-        status: newStatus,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updates)
       .eq('id', leadId)
       .eq('client_id', user.id); // RLS double-check
 
@@ -184,6 +236,7 @@ export async function updateLead(
     if (input.phone !== undefined) updates.phone = input.phone?.trim() || null;
     if (input.website !== undefined) updates.website = input.website?.trim() || null; // NUEVO
     if (input.notes !== undefined) updates.notes = input.notes?.trim() || null;
+    if (input.source !== undefined) updates.source = input.source?.trim() || null;
     if (input.status !== undefined) updates.status = input.status;
     if (input.potential_value !== undefined) updates.potential_value = input.potential_value;
     if (input.expected_close_date !== undefined) updates.expected_close_date = input.expected_close_date;

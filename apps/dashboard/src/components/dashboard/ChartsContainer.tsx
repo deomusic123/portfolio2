@@ -26,10 +26,19 @@ export async function ChartsContainer() {
       .select('status')
       .eq('client_id', user.id);
 
-    // Aggregate leads by status
+    // Aggregate leads by status with normalization
+    const normalizeLeadStatus = (status: string) => {
+      if (status === 'converted' || status === 'closed_won' || status === 'won') return 'converted';
+      if (status === 'closed_lost' || status === 'lost') return 'lost';
+      if (status === 'meeting_booked' || status === 'proposal_sent' || status === 'qualified' || status === 'proposal') return 'qualified';
+      if (status === 'investigating') return 'contacted';
+      return status;
+    };
+
     const leadsStatusMap: Record<string, number> = {};
     leads?.forEach((lead) => {
-      leadsStatusMap[lead.status] = (leadsStatusMap[lead.status] || 0) + 1;
+      const bucket = normalizeLeadStatus(lead.status);
+      leadsStatusMap[bucket] = (leadsStatusMap[bucket] || 0) + 1;
     });
 
     const leadsData = [

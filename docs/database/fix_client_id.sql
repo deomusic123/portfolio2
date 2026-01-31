@@ -96,6 +96,8 @@ ALTER TABLE leads ADD COLUMN IF NOT EXISTS email_valid BOOLEAN;
 
 -- 14. Agregar columna ai_summary si no existe
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS ai_summary TEXT;
+-- 15. Agregar columna position para ordenar en Kanban
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS position INT DEFAULT 0;
 
 -- 15. Verificación
 SELECT 
@@ -105,5 +107,5 @@ SELECT
   is_nullable
 FROM information_schema.columns 
 WHERE table_name = 'leads' 
-  AND column_name IN ('client_id', 'notes', 'source', 'website', 'ai_score', 'tech_stack', 'email_valid', 'ai_email_draft')
+  AND column_name IN ('client_id', 'notes', 'source', 'website', 'ai_score', 'tech_stack', 'email_valid', 'ai_email_draft', 'position')
 ORDER BY column_name;

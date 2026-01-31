@@ -1,10 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/lib/constants';
-import { groupLeadsByStatus, KANBAN_COLUMNS } from '@/lib/leads/utils';
 import type { Lead } from '@/lib/leads/types';
-import { LeadCard } from '@/components/leads/LeadCard';
 import { NewLeadButton } from '@/components/leads/NewLeadButton';
+import { LeadsBoardView } from '@/components/leads/LeadsBoardView';
 
 export const metadata = {
   title: 'Leads Engine - Portfolio2',
@@ -37,9 +36,6 @@ export default async function LeadsPage() {
       </div>
     );
   }
-
-  // Group leads by status (for Kanban columns)
-  const groupedLeads = groupLeadsByStatus((leads || []) as Lead[]);
 
   // Stats calculation
   const totalLeads = leads?.length || 0;
@@ -85,47 +81,8 @@ export default async function LeadsPage() {
         </button>
       </div>
 
-      {/* Kanban Board - Agency Sniper */}
-      <div className="grid grid-cols-7 gap-4 min-h-[600px]">
-        {KANBAN_COLUMNS.map((column) => {
-          const statusLeads = groupedLeads[column.id] || [];
-          return (
-            <div key={column.id} className="flex flex-col gap-3">
-              {/* Column Header */}
-              <div 
-                className="flex items-center justify-between px-4 py-3 rounded-lg border transition-all"
-                style={{ 
-                  backgroundColor: `${column.color}15`,
-                  borderColor: `${column.color}40`
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{column.icon}</span>
-                  <h3 className="text-sm font-semibold text-white">
-                    {column.label}
-                  </h3>
-                </div>
-                <span className="text-xs text-zinc-500">
-                  {statusLeads.length}
-                </span>
-              </div>
-
-              {/* Column Content */}
-              <div className="flex-1 space-y-3 overflow-y-auto max-h-[700px] pr-2">
-                {statusLeads.map((lead) => (
-                  <LeadCard key={lead.id} lead={lead} />
-                ))}
-                
-                {statusLeads.length === 0 && (
-                  <div className="flex-1 rounded-lg border-2 border-dashed border-white/5 flex items-center justify-center py-8">
-                    <p className="text-zinc-600 text-xs">Empty</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {/* Kanban Board - Draggable with Sheet */}
+      <LeadsBoardView leads={(leads || []) as Lead[]} />
 
       {/* Empty State */}
       {totalLeads === 0 && (
